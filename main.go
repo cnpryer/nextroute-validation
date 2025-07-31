@@ -26,6 +26,11 @@ type options struct {
 	Solve  nextroute.ParallelSolveOptions `json:"solve,omitempty"`
 	Format nextroute.FormatOptions        `json:"format,omitempty"`
 	Check  check.Options                  `json:"check,omitempty"`
+	Custom customOptions                  `json:"custom,omitempty"`
+}
+
+type customOptions struct {
+	Validate bool `json:"validate,omitempty"`
 }
 
 func solver(
@@ -36,6 +41,18 @@ func solver(
 	model, err := factory.NewModel(input, options.Model)
 	if err != nil {
 		return runSchema.Output{}, err
+	}
+
+	if options.Custom.Validate {
+		// If we are validating we want to completely invalidate an initial solution
+		// vehicle if it is infeasible.
+		if err := model.AddConstraint(NewStopSequenceVehicleConstraint(input)); err != nil {
+			return runSchema.Output{}, err
+		}
+	} else {
+		if err := model.AddConstraint(NewStopSequenceStopConstraint(input)); err != nil {
+			return runSchema.Output{}, err
+		}
 	}
 
 	solver, err := nextroute.NewParallelSolver(model)
