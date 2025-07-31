@@ -1,6 +1,3 @@
-// TODO:
-//   - Perf. Custom stop data is accessed many times.
-
 package main
 
 import (
