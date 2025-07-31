@@ -2,10 +2,9 @@ package main
 
 import (
 	"github.com/nextmv-io/nextroute"
-	"github.com/nextmv-io/nextroute/schema"
 )
 
-func NewStopSequenceStopConstraint(input schema.Input) *perStop {
+func NewStopSequenceStopConstraint() *perStop {
 	return &perStop{}
 }
 
@@ -18,7 +17,7 @@ func (c *perStop) EstimateIsViolated(
 	return checker.isMoveViolating(move), nextroute.NoPositionsHint()
 }
 
-func NewStopSequenceVehicleConstraint(input schema.Input) *perVehicle {
+func NewStopSequenceVehicleConstraint() *perVehicle {
 	return &perVehicle{}
 }
 

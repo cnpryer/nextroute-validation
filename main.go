@@ -46,11 +46,11 @@ func solver(
 	if options.Custom.Validate {
 		// If we are validating we want to completely invalidate an initial solution
 		// vehicle if it is infeasible.
-		if err := model.AddConstraint(NewStopSequenceVehicleConstraint(input)); err != nil {
+		if err := model.AddConstraint(NewStopSequenceVehicleConstraint()); err != nil {
 			return runSchema.Output{}, err
 		}
 	} else {
-		if err := model.AddConstraint(NewStopSequenceStopConstraint(input)); err != nil {
+		if err := model.AddConstraint(NewStopSequenceStopConstraint()); err != nil {
 			return runSchema.Output{}, err
 		}
 	}
