@@ -57,7 +57,11 @@ func solver(
 		if err != nil {
 			return runSchema.Output{}, err
 		}
-		solveOptions.Iterations = 0 // No iterations needed for validation
+		// No iterations needed for validation.
+		// TODO: https://github.com/nextmv-io/nextroute/issues/94.
+		// If we were to use some operator approach then the operator might not be
+		// executed if iterations is set to 0.
+		solveOptions.Iterations = 0
 	} else {
 		solver, err = nextroute.NewParallelSolver(model)
 		if err != nil {
