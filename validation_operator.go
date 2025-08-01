@@ -39,12 +39,12 @@ func (o *validationUnplanOperator) Execute(
 		return nil
 	}
 
-	o.unplanAllInfeasibleVehicles(workSolution)
+	unplanAllInfeasibleVehicles(workSolution)
 
 	return nil
 }
 
-func (o *validationUnplanOperator) unplanAllInfeasibleVehicles(solution nextroute.Solution) error {
+func unplanAllInfeasibleVehicles(solution nextroute.Solution) error {
 	vehicles := common.Filter(solution.Vehicles(), func(vehicle nextroute.SolutionVehicle) bool {
 		return !vehicle.IsEmpty()
 	})

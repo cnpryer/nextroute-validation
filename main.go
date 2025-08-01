@@ -43,6 +43,12 @@ func solver(
 		return runSchema.Output{}, err
 	}
 
+	// Add a constraint that will unplan a move from the initial solution.
+	err = model.AddConstraint(NewStopSequenceStopConstraint())
+	if err != nil {
+		return runSchema.Output{}, err
+	}
+
 	solveOptions := options.Solve
 	var solver nextroute.ParallelSolver
 
