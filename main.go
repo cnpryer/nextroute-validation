@@ -62,6 +62,7 @@ func solver(
 		// If we were to use some operator approach then the operator might not be
 		// executed if iterations is set to 0.
 		solveOptions.Iterations = 0
+		solveOptions.ParallelRuns = 1
 	} else {
 		solver, err = nextroute.NewParallelSolver(model)
 		if err != nil {
