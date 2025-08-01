@@ -4,46 +4,46 @@ import (
 	"github.com/nextmv-io/nextroute"
 )
 
-func NewStopSequenceStopConstraint() *perStop {
-	return &perStop{}
+func NewStopSequenceStopConstraint() *stopSequenceStopConstraintImpl {
+	return &stopSequenceStopConstraintImpl{}
 }
 
-type perStop struct{}
+type stopSequenceStopConstraintImpl struct{}
 
-func (c *perStop) EstimateIsViolated(
+func (c *stopSequenceStopConstraintImpl) EstimateIsViolated(
 	move nextroute.SolutionMoveStops,
 ) (isViolated bool, stopPositionsHint nextroute.StopPositionsHint) {
 	checker := newChecker()
 	return checker.isMoveInfeasible(move), nextroute.NoPositionsHint()
 }
 
-func NewStopSequenceVehicleConstraint() *perVehicle {
-	return &perVehicle{}
+func NewStopSequenceVehicleConstraint() *stopSequenceVehicleConstraintImpl {
+	return &stopSequenceVehicleConstraintImpl{}
 }
 
-type perVehicle struct{}
+type stopSequenceVehicleConstraintImpl struct{}
 
-func (c *perVehicle) EstimateIsViolated(
+func (c *stopSequenceVehicleConstraintImpl) EstimateIsViolated(
 	move nextroute.SolutionMoveStops,
 ) (isViolated bool, stopPositionsHint nextroute.StopPositionsHint) {
 	checker := newChecker()
 	return checker.isMoveInfeasible(move), nextroute.NoPositionsHint()
 }
 
-func (c *perVehicle) DoesVehicleHaveViolations(
+func (c *stopSequenceVehicleConstraintImpl) DoesVehicleHaveViolations(
 	vehicle nextroute.SolutionVehicle,
 ) bool {
 	checker := newChecker()
 	return checker.isVehicleInfeasible(vehicle)
 }
 
-func newChecker() *checker {
-	return &checker{}
+func newChecker() *stopSequenceChecker {
+	return &stopSequenceChecker{}
 }
 
-type checker struct{}
+type stopSequenceChecker struct{}
 
-func (c *checker) isVehicleInfeasible(vehicle nextroute.SolutionVehicle) bool {
+func (c *stopSequenceChecker) isVehicleInfeasible(vehicle nextroute.SolutionVehicle) bool {
 	if vehicle.IsEmpty() || vehicle.NumberOfStops() == 0 {
 		return false
 	}
@@ -63,7 +63,7 @@ func (c *checker) isVehicleInfeasible(vehicle nextroute.SolutionVehicle) bool {
 	return false
 }
 
-func (c *checker) isMoveInfeasible(move nextroute.SolutionMoveStops) bool {
+func (c *stopSequenceChecker) isMoveInfeasible(move nextroute.SolutionMoveStops) bool {
 	generator := nextroute.NewSolutionStopGenerator(move, true, true)
 	last := ""
 	for stop := generator.Next(); !stop.IsZero(); stop = generator.Next() {
