@@ -70,13 +70,13 @@
   "vehicles": [
     {
       "id": "vehicle-0",
-      "initial_stops": ["s1", "s3", "s2"],
+      "initial_stops": [{"id": "s1", "fixed": false}, {"id": "s3", "fixed": false}, {"id": "s2", "fixed": false}],
       "start_time": "2023-01-01T06:00:00-06:00",
       "end_time": "2023-01-01T10:00:00-06:00"
     },
     {
       "id": "vehicle-1",
-      "initial_stops": ["s4", "s6", "s5"],
+      "initial_stops": [{"id": "s4", "fixed": false}, {"id": "s6", "fixed": false}, {"id": "s5", "fixed": false}],
       "start_time": "2023-01-01T10:00:00-06:00",
       "end_time": "2023-01-01T16:00:00-06:00"
     }
