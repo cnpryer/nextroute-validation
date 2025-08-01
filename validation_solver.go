@@ -59,9 +59,7 @@ func NewValidationSolver(model nextroute.Model) (nextroute.Solver, error) {
 		return nil, err
 	}
 
-	solver.AddSolveOperators(
-		unplanOperator,
-	)
+	solver.AddSolveOperators(unplanOperator)
 
 	return solver, nil
 }

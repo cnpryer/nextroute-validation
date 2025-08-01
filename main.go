@@ -51,7 +51,7 @@ func solver(
 		if err != nil {
 			return runSchema.Output{}, err
 		}
-		solveOptions.Iterations = 0
+		solveOptions.Iterations = 0 // No iterations needed for validation
 	} else {
 		solver, err = nextroute.NewParallelSolver(model)
 		if err != nil {
