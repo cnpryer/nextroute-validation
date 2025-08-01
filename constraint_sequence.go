@@ -14,7 +14,7 @@ func (c *perStop) EstimateIsViolated(
 	move nextroute.SolutionMoveStops,
 ) (isViolated bool, stopPositionsHint nextroute.StopPositionsHint) {
 	checker := newChecker()
-	return checker.isMoveViolating(move), nextroute.NoPositionsHint()
+	return checker.isMoveInfeasible(move), nextroute.NoPositionsHint()
 }
 
 func NewStopSequenceVehicleConstraint() *perVehicle {
@@ -27,14 +27,14 @@ func (c *perVehicle) EstimateIsViolated(
 	move nextroute.SolutionMoveStops,
 ) (isViolated bool, stopPositionsHint nextroute.StopPositionsHint) {
 	checker := newChecker()
-	return checker.isMoveViolating(move), nextroute.NoPositionsHint()
+	return checker.isMoveInfeasible(move), nextroute.NoPositionsHint()
 }
 
 func (c *perVehicle) DoesVehicleHaveViolations(
 	vehicle nextroute.SolutionVehicle,
 ) bool {
 	checker := newChecker()
-	return checker.isVehicleViolating(vehicle)
+	return checker.isVehicleInfeasible(vehicle)
 }
 
 func newChecker() *checker {
@@ -43,7 +43,7 @@ func newChecker() *checker {
 
 type checker struct{}
 
-func (c *checker) isVehicleViolating(vehicle nextroute.SolutionVehicle) bool {
+func (c *checker) isVehicleInfeasible(vehicle nextroute.SolutionVehicle) bool {
 	if vehicle.IsEmpty() || vehicle.NumberOfStops() == 0 {
 		return false
 	}
@@ -63,7 +63,7 @@ func (c *checker) isVehicleViolating(vehicle nextroute.SolutionVehicle) bool {
 	return false
 }
 
-func (c *checker) isMoveViolating(move nextroute.SolutionMoveStops) bool {
+func (c *checker) isMoveInfeasible(move nextroute.SolutionMoveStops) bool {
 	generator := nextroute.NewSolutionStopGenerator(move, true, true)
 	last := ""
 	for stop := generator.Next(); !stop.IsZero(); stop = generator.Next() {
