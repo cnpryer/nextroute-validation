@@ -59,11 +59,34 @@ func unplanAllInfeasibleVehicles(solution nextroute.Solution) error {
 		}
 
 		for _, constraint := range solution.Model().Constraints() {
-			if constraint.(nextroute.SolutionVehicleViolationCheck).DoesVehicleHaveViolations(vehicle) {
-				vehicle.Unplan()
+			if !isVehicleFeasible(vehicle, constraint) {
+				vehicle.Unplan() // TODO: May need to avoid re-linking.
+				break
 			}
 		}
 	}
 
 	return nil
+}
+
+func isVehicleFeasible(
+	vehicle nextroute.SolutionVehicle,
+	constraint nextroute.ModelConstraint,
+) bool {
+	vehicleChecker := constraint.(nextroute.SolutionVehicleViolationCheck)
+	if vehicleChecker.DoesVehicleHaveViolations(vehicle) {
+		return false
+	}
+
+	for _, stop := range vehicle.SolutionStops() {
+		if stop.IsZero() {
+			continue
+		}
+		stopChecker := constraint.(nextroute.SolutionStopViolationCheck)
+		if stopChecker.DoesStopHaveViolations(stop) {
+			return false
+		}
+	}
+
+	return true
 }
