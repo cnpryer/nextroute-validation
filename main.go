@@ -43,32 +43,22 @@ func solver(
 		return runSchema.Output{}, err
 	}
 
-	iterations := options.Solve.Iterations
-	if options.Custom.Validate {
-		// If we are validating we want to completely invalidate an initial solution
-		// vehicle if it is infeasible.
-		if err := model.AddConstraint(NewStopSequenceVehicleConstraint()); err != nil {
-			return runSchema.Output{}, err
-		}
-		if iterations != 0 {
-			// Validation is intended for initial solutions only. Therefore, we set
-			// iterations to 0 to ensure that the solver does not attempt to improve
-			// the solution.
-			iterations = 0
-		}
-	} else {
-		if err := model.AddConstraint(NewStopSequenceStopConstraint()); err != nil {
-			return runSchema.Output{}, err
-		}
-	}
-
-	solver, err := nextroute.NewParallelSolver(model)
-	if err != nil {
-		return runSchema.Output{}, err
-	}
-
 	solveOptions := options.Solve
-	solveOptions.Iterations = iterations
+	var solver nextroute.ParallelSolver
+
+	if options.Custom.Validate {
+		solver, err = NewValidationParallelSolver(model)
+		if err != nil {
+			return runSchema.Output{}, err
+		}
+		solveOptions.Iterations = 0
+	} else {
+		solver, err = nextroute.NewParallelSolver(model)
+		if err != nil {
+			return runSchema.Output{}, err
+		}
+	}
+
 	solutions, err := solver.Solve(ctx, solveOptions)
 	if err != nil {
 		return runSchema.Output{}, err
